@@ -39,6 +39,7 @@ app = FastAPI(lifespan=lifespan,
 if not app.openapi_schema:
     app.openapi_schema = openapi_params
 
+# Task 2b
 @app.get("/ping")
 async def ping():
     """
@@ -46,6 +47,7 @@ async def ping():
     """
     return {"message":"pong"}
 
+# Task 2c
 class AsrResponse(BaseModel):
     """
     Defining the data validation for response fields for /asr post request
