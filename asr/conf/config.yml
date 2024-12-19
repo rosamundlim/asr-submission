@@ -9,3 +9,8 @@ audio:
 asr_api:
   inference: http://localhost:8001/asr
   ping: http://localhost:8001/ping
+
+cv-decode:
+  aiohttp_tcp_connectors: 100
+  aiohttp_timeout: 600
+  semaphore_limit: 50
