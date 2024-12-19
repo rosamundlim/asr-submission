@@ -6,8 +6,8 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from pydantic import BaseModel
 from utils import paths, utility_functions
 # import sys
-
-logging.basicConfig(level=logging.INFO,format='%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 # Define filepaths
 OPENAPI_PATH = paths.OPENAPI
@@ -36,6 +36,7 @@ app = FastAPI(lifespan=lifespan,
     description=openapi_params["info"]["description"],
     version=openapi_params["info"]["version"],
 )
+
 if not app.openapi_schema:
     app.openapi_schema = openapi_params
 
