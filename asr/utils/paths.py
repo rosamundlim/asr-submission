@@ -11,6 +11,8 @@ ASR = BASE_DIR / "asr"
 CV_VALID_DEV = ASR / "cv-valid-dev"
 MODEL_ARTIFACTS = ASR / "model_artifacts"
 CONF = ASR / "conf"
+LOGS = ASR / "logs"
+
 # Files
 CV_VALID_DEV_CSV = ASR / "cv-valid-dev.csv"
 
