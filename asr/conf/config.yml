@@ -5,3 +5,7 @@ model:
 
 audio:
   sampling_frequency: 16000
+
+asr_api:
+  inference: http://localhost:8001/asr
+  ping: http://localhost:8001/ping
