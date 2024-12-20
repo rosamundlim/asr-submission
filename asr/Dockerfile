@@ -12,8 +12,8 @@ COPY ./requirements.txt /app/requirements.txt
 # Install dependencies in container; no cache to reduce image size
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-# Copy ./asr folder into docker's /app folder (working directory)
-COPY ./asr /app/asr
+# Copy asr folder into docker's /app folder (working directory)
+COPY ./asr /app/asr/
 
 # Make port 8001 available
 EXPOSE 8001
