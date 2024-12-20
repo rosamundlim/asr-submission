@@ -4,7 +4,7 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from pydantic import BaseModel
-from utils import paths, utility_functions
+from asr.utils import paths, utility_functions
 # import sys
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s:%(levelname)s:%(message)s')
@@ -61,9 +61,10 @@ async def asr(file: UploadFile = File(...)):
     """
     Wav2Vec model inferencing for ASR tasks.
     It takes in the raw .mp3 file, resamples it to sampling_freq
-    set by user, tokenizes and makes a prediction. 
+    set by user, tokenizes and makes a prediction.
+    After, it explicitly closes the file to cleanup.
     It returns transcription (str) of the .mp3 file and the duration
-    of the uploaded .mp3 file (this would imply the duration of the 
+    of the uploaded .mp3 file (this would imply the duration of the
     file before resampling).
     """
     if not file.filename.endswith('.mp3'):
@@ -85,3 +86,6 @@ async def asr(file: UploadFile = File(...)):
 
     except Exception as e:
         return {"error": str(e)}
+
+    finally:
+        await file.close()
