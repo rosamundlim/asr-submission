@@ -3,13 +3,13 @@
 # Define base image, I used python 3.11.11 for this project
 FROM python:3.11.11-slim
 
-# Set /app as the working directory of the container
-WORKDIR /app
+# Set /app/asr as the working directory of the container
+WORKDIR /app/asr
 
 # Send requirements.txt to container's working directory
 COPY ./requirements.txt /app/requirements.txt
 
-# Install dependencies in container
+# Install dependencies in container; no cache to reduce image size
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 # Copy ./asr folder into docker's /app folder (working directory)
@@ -19,5 +19,5 @@ COPY ./asr /app/asr
 EXPOSE 8001
 
 # Run asr_api.py when container launches
-CMD ["uvicorn", "asr.asr_api:app", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["uvicorn", "asr_api:app", "--host", "0.0.0.0", "--port", "8001"]
 
