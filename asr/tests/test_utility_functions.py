@@ -1,7 +1,7 @@
 """Script for conducting unit testing for utility_functions.py using PyTest Framework"""
 
-from utils import utility_functions
 import warnings
+from asr_utils import utility_functions
 import yaml
 from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
 import numpy as np

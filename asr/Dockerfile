@@ -1,7 +1,7 @@
 # Adapted template from https://fastapi.tiangolo.com/deployment/docker/#create-the-fastapi-code
 
 # Define base image, I used python 3.11.11 for this project
-FROM python:3.11.11-slim
+FROM python:3.11.11-slim-bullseye
 
 # Set /app/asr as the working directory of the container
 WORKDIR /app/asr

@@ -17,7 +17,7 @@ from typing import List
 import aiofiles
 import aiohttp
 from tqdm.asyncio import tqdm
-from utils import paths, utility_functions
+from asr_utils import paths, utility_functions
 
 # Define paths and variables
 AUDIO_DIRECTORY = paths.CV_VALID_DEV
