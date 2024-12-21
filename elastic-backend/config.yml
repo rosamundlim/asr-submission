@@ -1,0 +1,42 @@
+elasticsearch_config:
+  endpoint_url: https://localhost:9200 # http`s` due to Elastic Search's xpack.security.http.ssl.enabled = True 
+
+elasticsearch_map_type: # Edit this section to change your explicit mapping
+  properties:
+    filename:
+      type: keyword
+    text:
+      type: text
+      analyzer: english
+    up_votes:
+      type: integer
+    down_votes:
+      type: integer
+    generated_text:
+      type: text
+      analyzer: english
+    duration:
+      type: float
+      coerce: True
+    age:
+      type: keyword
+    gender:
+      type: keyword
+    accent:
+      type: keyword
+  
+elasticsearch_index:
+  name: cv-transcriptions
+
+elasticsearch_map_cols: # Follow the format elastic search col: original data col
+  filename: filename
+  text: text
+  up_votes: up_votes
+  down_votes: down_votes
+  generated_text: generated_text
+  duration: duration
+  age: age
+  gender: gender
+  accent: accent
+  
+
