@@ -1,8 +1,13 @@
-"""Script for indexing data from cv-valid-dev.csv"""
+"""
+Script for indexing data from cv-valid-dev.csv
+
+References:
+i. https://dylancastillo.co/posts/elasticseach-python.html
+"""
 
 import os
-import logging
 import sys
+import logging
 from dotenv import load_dotenv
 from eb_utils import paths, utility_functions
 from elasticsearch import Elasticsearch
@@ -35,28 +40,61 @@ index_map_type = config['elasticsearch_map_type']
 index_map_cols = config['elasticsearch_map_cols']
 
 
-def create_index_add_data(es: Elasticsearch,
-             index_name: str,
-             df: pd.DataFrame,
+def create_index(client: Elasticsearch,
+             es_index_name: str,
              type_mapping: dict,
-             col_mapping: dict
              ) -> None:
-    es.indices.create(index=index_name, mappings=type_mapping)
+    """
+    Creates an Elasticsearch index with the specified name and mapping.
 
-    for i, row in df.iterrows():
-        doc = {es_col: row[df_col] for es_col, df_col in col_mapping.items()}
-        es.index(index=index_name, id=i, document= doc)
+    Args:
+        client (Elasticsearch): Elasticsearch client instance.
+        es_index_name (str): Name of the Elasticsearch index to create.
+        type_mapping (dict): Mapping schema for the index.
 
-    es.indices.refresh(index=index_name)
-    response = es.cat.count(index=index_name, format="json")[0]
+    Logs:
+        Logs a success message upon index creation.
+    """
+    client.indices.create(index=es_index_name, mappings=type_mapping)
+    logging.info("Index `%s` created successfully", es_index_name)
+
+def add_bulk_data(client: Elasticsearch,
+                  dataframe: pd.DataFrame,
+                  col_mapping: dict
+                  ) -> None:
+    """
+    Uploads data from a DataFrame to an Elasticsearch index in bulk.
+
+    Args:
+        client (Elasticsearch): Elasticsearch client instance.
+        dataframe (pd.DataFrame): DataFrame containing the data to be indexed.
+        col_mapping (dict): Mapping of Elasticsearch fields to DataFrame columns.
+
+    Logs:
+        Logs success after data upload and displays index count details.
+
+    Raises:
+        NameError: If `index_name` is not defined in the scope.
+    """
+    bulk_data = []
+    for i, row in dataframe.iterrows():
+        bulk_data.append(
+            {
+                "_index": index_name,
+                "_id": i,
+                "_source": {es_col: row[df_col] for es_col, df_col in col_mapping.items()}
+            }
+        )
+
+    bulk(client, bulk_data)
+
+    client.indices.refresh(index=index_name)
+    response = client.cat.count(index=index_name, format="json")[0]
+
+    logging.info('Data successfully created!')
 
     for key, val in response.items():
         logging.info("%s : %s", key, val)
-
-    # optional delete index
-    es.indices.delete(index=index_name)
-
-    logging.info('Index `%s` deleted', index_name)
 
 if __name__ == "__main__":
     # Connect to cluster
@@ -66,15 +104,24 @@ if __name__ == "__main__":
                        )
     print(es.info())
 
-    resp = es.indices.exists(
-    index=index_name)
-    print(resp)
+    resp = es.indices.exists(index=index_name)
 
-    sys.exit()
+    if resp:
+        delete = input(f"Index `{index_name}` already exists. Delete and recreate? [Y/N]:")
 
-    print('deleted index')
+        if delete == 'Y':
+            es.indices.delete(index=index_name)
 
-    # read data into pd dataframe
-    df = pd.read_csv(CV_VALID_DEV_CSV)
-    df = df.fillna("NA")
-    create_index_add_data(es, index_name, df, index_map_type, index_map_cols)
+            # Read data into pd dataframe
+            df = pd.read_csv(CV_VALID_DEV_CSV)
+            df = df.fillna("NA")
+
+            # data ingestion into Elastic search
+            create_index(client=es, es_index_name=index_name, type_mapping=index_map_type)
+            add_bulk_data(client=es, dataframe=df, col_mapping=index_map_cols)
+        elif delete == 'N':
+            print('Exiting programe')
+            sys.exit()
+        else:
+            raise ValueError("Can only accept `Y` (delete and recreate index) \
+                             or `N` (do not delete)")
