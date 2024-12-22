@@ -114,7 +114,13 @@ if __name__ == "__main__":
 
             # Read data into pd dataframe
             df = pd.read_csv(CV_VALID_DEV_CSV)
-            df = df.fillna("NA")
+            df['generated_text'] = df['generated_text'].fillna("no transcription due \
+                                                               to .mp3 file issue")
+            df = df.drop(['text', 'up_votes', 'down_votes'], axis=1)
+            df['duration'] = df['duration'].fillna(0)
+            df['age'] = df['age'].fillna('undisclosed')
+            df['gender'] = df['gender'].fillna('undisclosed')
+            df['accent'] = df['accent'].fillna('to be advised')
 
             # data ingestion into Elastic search
             create_index(client=es, es_index_name=index_name, type_mapping=index_map_type)
@@ -125,3 +131,17 @@ if __name__ == "__main__":
         else:
             raise ValueError("Can only accept `Y` (delete and recreate index) \
                              or `N` (do not delete)")
+    else:
+        # Read data into pd dataframe
+        df = pd.read_csv(CV_VALID_DEV_CSV)
+        df['generated_text'] = df['generated_text'].fillna("no transcription due \
+                                                            to .mp3 file issue")
+        df = df.drop(['text', 'up_votes', 'down_votes'], axis=1)
+        df['duration'] = df['duration'].fillna(0)
+        df['age'] = df['age'].fillna('undisclosed')
+        df['gender'] = df['gender'].fillna('undisclosed')
+        df['accent'] = df['accent'].fillna('to be advised')
+
+        # data ingestion into Elastic search
+        create_index(client=es, es_index_name=index_name, type_mapping=index_map_type)
+        add_bulk_data(client=es, dataframe=df, col_mapping=index_map_cols)
