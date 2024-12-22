@@ -1,0 +1,14 @@
+# .dockerignore
+
+# Ignore folders
+cv-valid-dev/
+logs/
+notebooks/
+tests/
+__pycache__/
+
+# Ignore files
+cv-decode.py
+cv-valid-dev.csv
+*.mp3
+*.pyc

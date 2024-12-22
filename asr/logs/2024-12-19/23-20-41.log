@@ -1,0 +1,8 @@
+(asr) PS C:\Users\rosam\OneDrive\Desktop\asr-submission\asr> python cv-decode.py
+2024-12-19 23:20:41,367:INFO:Found 4076 .mp3 files.
+2024-12-19 23:20:41,380:INFO:No missing .mp3 files
+2024-12-19 23:20:41,638:INFO:API Health check status ok
+Transcribing .mp3 files: 100%|████████████████████████████████████████████████████| 4076/4076 [44:31<00:00,  1.53it/s]
+2024-12-20 00:05:12,942:INFO:Completed 4076 transcription tasks
+2024-12-20 00:05:12,949:INFO:Writing results to: C:\Users\rosam\OneDrive\Desktop\asr-submission\asr\cv-valid-dev.csv
+2024-12-20 00:05:12,962:INFO:Program Duration: 2671.61 seconds

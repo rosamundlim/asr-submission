@@ -1,0 +1,16 @@
+model:
+  path: facebook/wav2vec2-large-960h
+  processor_name: Wav2Vec2Processor
+  model_name: Wav2Vec2ForCTC
+
+audio:
+  sampling_frequency: 16000
+
+asr_api:
+  inference: http://localhost:8001/asr
+  ping: http://localhost:8001/ping
+
+cv-decode:
+  aiohttp_tcp_connectors: 100
+  aiohttp_timeout: 600
+  semaphore_limit: 50
