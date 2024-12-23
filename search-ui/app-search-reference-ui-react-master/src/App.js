@@ -1,6 +1,6 @@
 import React from "react";
 
-import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
+import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
 
 import {
   ErrorBoundary,
@@ -26,19 +26,61 @@ import {
   getFacetFields
 } from "./config/config-helper";
 
+import secrets from "./secrets.json";
+
 const { hostIdentifier, searchKey, endpointBase, engineName } = getConfig();
-const connector = new AppSearchAPIConnector({
-  searchKey,
-  engineName,
-  hostIdentifier,
-  endpointBase
+const connector = new ElasticsearchAPIConnector({
+  host: "https://localhost:9200",
+  apiKey: secrets.API_KEY,
+  index: "cv-transcriptions"
 });
 const config = {
   searchQuery: {
-    facets: buildFacetConfigFromConfig(),
-    ...buildSearchOptionsFromConfig()
+    search_fields: {
+      generated_text: {
+        weight: 5,
+        fuzziness: "AUTO"
+      }
+    },
+    result_fields: {
+      filename: {
+        raw: {}
+      },
+      generated_text: {
+        raw: {},
+      },
+      age: {
+        raw: {}
+      },
+      duration: {
+        raw: {}
+      },
+      gender: {
+        raw: {}
+      },
+      accent: {
+        raw: {}
+      }
+    },
+    disjunctiveFacets: ["age", "gender", "accent","duration"],
+    facets: {
+      "age": {type:"value"},
+      "gender": {type: "value"},
+      "accent": {type: "value"},
+      "duration": {
+        type: "range",
+        ranges: [
+          {from: 0, to: 5, name:"0-5 sec"},
+          {from: 5, to: 10, name:"5-10 sec"},
+          {from: 10, to: 15, name:"10-15 sec"},
+          {from: 15, to: 20, name:"15-20 sec"},
+          {from: 20, to: 25, name:"20-25 sec"},
+          {from: 25, to: 100, name:"25-100 sec"}
+        ]
+      }
+
+    }
   },
-  autocompleteQuery: buildAutocompleteQueryConfig(),
   apiConnector: connector,
   alwaysSearchOnInitialLoad: true
 };
@@ -49,29 +91,21 @@ export default function App() {
       <WithSearch mapContextToProps={({ wasSearched }) => ({ wasSearched })}>
         {({ wasSearched }) => {
           return (
-            <div className="App">
+            <div className="CV Transcriptions">
               <ErrorBoundary>
                 <Layout
-                  header={<SearchBox autocompleteSuggestions={true} />}
+                  header={<SearchBox/>}
                   sideContent={
                     <div>
-                      {wasSearched && (
-                        <Sorting
-                          label={"Sort by"}
-                          sortOptions={buildSortOptionsFromConfig()}
-                        />
-                      )}
-                      {getFacetFields().map(field => (
-                        <Facet key={field} field={field} label={field} />
-                      ))}
+                      {wasSearched}
+                      <Facet key={"1"} field={"age"} label={"age"} />
+                      <Facet key={"2"} field={"gender"} label={"gender"} />
+                      <Facet key={"3"} field={"accent"} label={"accent"} />
+                      <Facet key={"4"} field={"duration"} label={"duration"} />
                     </div>
                   }
-                  bodyContent={
-                    <Results
-                      titleField={getConfig().titleField}
-                      urlField={getConfig().urlField}
-                      thumbnailField={getConfig().thumbnailField}
-                      shouldTrackClickThrough={true}
+                  bodyContent={<Results 
+                    shouldTrackClickThrough={true}
                     />
                   }
                   bodyHeader={
