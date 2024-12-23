@@ -96,12 +96,33 @@ def add_bulk_data(client: Elasticsearch,
     for key, val in response.items():
         logging.info("%s : %s", key, val)
 
+def preprocess_df(path: str) -> pd.DataFrame:
+    """
+    Preprocesses a CSV file by cleaning and filling missing values.
+
+    Args:
+        path (str): Path to the CSV file.
+
+    Returns:
+        pd.DataFrame: Cleaned DataFrame with specified transformations.
+    """
+    data_frame = pd.read_csv(path)
+    data_frame['generated_text'] = data_frame['generated_text'].fillna("no transcription due \
+                                                        to .mp3 file issue")
+    data_frame = data_frame.drop(['text', 'up_votes', 'down_votes'], axis=1)
+    data_frame['duration'] = data_frame['duration'].fillna(0)
+    data_frame['age'] = data_frame['age'].fillna('undisclosed')
+    data_frame['gender'] = data_frame['gender'].fillna('undisclosed')
+    data_frame['accent'] = data_frame['accent'].fillna('to be advised')
+    return data_frame
+
 if __name__ == "__main__":
     # Connect to cluster
     es = Elasticsearch([es_endpoint],
                        ca_certs = CA_CERT_PATH,
                        basic_auth=(es_username, es_password)
                        )
+
     print(es.info())
 
     resp = es.indices.exists(index=index_name)
@@ -112,19 +133,13 @@ if __name__ == "__main__":
         if delete == 'Y':
             es.indices.delete(index=index_name)
 
-            # Read data into pd dataframe
-            df = pd.read_csv(CV_VALID_DEV_CSV)
-            df['generated_text'] = df['generated_text'].fillna("no transcription due \
-                                                               to .mp3 file issue")
-            df = df.drop(['text', 'up_votes', 'down_votes'], axis=1)
-            df['duration'] = df['duration'].fillna(0)
-            df['age'] = df['age'].fillna('undisclosed')
-            df['gender'] = df['gender'].fillna('undisclosed')
-            df['accent'] = df['accent'].fillna('to be advised')
+            # Read data into pd dataframe and apply preprocessing
+            df = preprocess_df(CV_VALID_DEV_CSV)
 
             # data ingestion into Elastic search
             create_index(client=es, es_index_name=index_name, type_mapping=index_map_type)
             add_bulk_data(client=es, dataframe=df, col_mapping=index_map_cols)
+
         elif delete == 'N':
             print('Exiting programe')
             sys.exit()
@@ -133,14 +148,7 @@ if __name__ == "__main__":
                              or `N` (do not delete)")
     else:
         # Read data into pd dataframe
-        df = pd.read_csv(CV_VALID_DEV_CSV)
-        df['generated_text'] = df['generated_text'].fillna("no transcription due \
-                                                            to .mp3 file issue")
-        df = df.drop(['text', 'up_votes', 'down_votes'], axis=1)
-        df['duration'] = df['duration'].fillna(0)
-        df['age'] = df['age'].fillna('undisclosed')
-        df['gender'] = df['gender'].fillna('undisclosed')
-        df['accent'] = df['accent'].fillna('to be advised')
+        df = preprocess_df(CV_VALID_DEV_CSV)
 
         # data ingestion into Elastic search
         create_index(client=es, es_index_name=index_name, type_mapping=index_map_type)
