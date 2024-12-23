@@ -1,0 +1,11 @@
+{
+    "endpointBase": "https://localhost:9200",
+    "engineName": "cv-transcriptions",
+    "searchKey": "SlV2azdwTUJqNTZKVTliOGhBSms6SXZIekZQWXZUZE9kQXpwOHFfc2JnZw==",
+    "searchFields": ["generated_text"],
+    "resultFields": [
+      "generated_text"
+    ],
+    "facets": ["age"]
+  }
+  
