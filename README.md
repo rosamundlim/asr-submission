@@ -44,11 +44,9 @@ There is a run.sh file at root level, with the options:
 1. Create Environment and Install Requirements:
 Sets up a Conda environment and installs Python dependencies.
 
-Run ASR API with Docker:
 2. Builds and runs a Docker container for the ASR API.
 Offers an option to stop and remove the container.
 
-View Search Engine UI:
 3. Starts Elasticsearch backend services using Docker Compose.
 Launches the search UI with Yarn.
 Exit:
@@ -59,7 +57,7 @@ To execute run.sh, simply cd to the root folder ./asr-submission, and run ./run.
 
 ## asr-api 
 
-This is a API microservice which transcribes .mp3 files. To run this select option 2 when executing run.sh. 
+This is a API microservice which transcribes .mp3 files. To run this select option 2 when executing run.sh. Ensure you have requirements installed beforehand (option 1 in run.sh)
 
 ## cv-transcriptions search engine
 
@@ -78,7 +76,7 @@ Nevertheless, I was able to get the intended functions of the search engine runn
 If you would like to deploy it locally, take the following steps: 
 1. Go to requirements.txt > run pip install on lines 21 and 22
 2. Ensure you have the following files in the following directories: 
-- ../elastic-backend: edit env.example to .env, place you ca.crt here (refer to ElastiSearch documentation)
+- ../elastic-backend: edit env.example to .env, place your ca.crt here (refer to ElastiSearch documentation)
 - ../search-ui/../config/: edit engine.json.example to engine.json
 - ../search-ui/../src/: replace secrets.json.example with your key and change it to secrets.json
 - npm install node-modules (ensure you have node-modules installed)
