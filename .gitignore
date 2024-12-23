@@ -166,3 +166,5 @@ asr/cv-valid-dev/
 *.crt
 
 node_modules
+
+.env
