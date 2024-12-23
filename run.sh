@@ -1,6 +1,8 @@
 #!/bin/bash
 
+# NOTE: Make sure you are at the root folder ./asr-submission before executing any of the selection here
 # Root Directory
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo $ROOT_DIR
 
@@ -8,7 +10,7 @@ echo $ROOT_DIR
 display_menu() {
   echo "1. Create environment and install requirements"
   echo "2. Run asr-api on docker"
-  echo "3. Option Three"
+  echo "3. View cv-transcriptions search engine"
   echo "4. Exit"
   echo -n "Enter one of the following numbers: "
 }
@@ -34,6 +36,13 @@ run_asr_api_docker() {
     fi
 }
 
+view_search_ui() {
+    cd elastic-backend
+    docker-compose up -d
+    cd ../search-ui/app-search-reference-ui-react-master/src    
+    yarn start
+}
+
 # Main script loop
 while true; do
   display_menu
@@ -46,8 +55,7 @@ while true; do
     2)
       run_asr_api_docker;;
     3)
-      echo "You have selected number three"
-      echo "Performing task for option three..." ;;
+      view_search_ui;;
     4)
       echo "Exiting. Goodbye!"
       exit 0 ;;
