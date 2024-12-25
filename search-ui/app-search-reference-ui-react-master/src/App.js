@@ -11,29 +11,33 @@ import {
   PagingInfo,
   ResultsPerPage,
   Paging,
-  Sorting,
+  //Sorting,
   WithSearch
 } from "@elastic/react-search-ui";
 import { Layout } from "@elastic/react-search-ui-views";
 import "@elastic/react-search-ui-views/lib/styles/styles.css";
 
+/*
 import {
   buildAutocompleteQueryConfig,
   buildFacetConfigFromConfig,
   buildSearchOptionsFromConfig,
   buildSortOptionsFromConfig,
-  getConfig,
+  getConfig
   getFacetFields
 } from "./config/config-helper";
 
-import secrets from "./secrets.json";
-
 const { hostIdentifier, searchKey, endpointBase, engineName } = getConfig();
+*/
+
+import secrets from "./config/engine.json";
+
 const connector = new ElasticsearchAPIConnector({
-  host: "https://localhost:9200",
-  apiKey: secrets.API_KEY,
+  host: "http://52.77.217.6:9200",
+  apiKey: secrets.searchKey,
   index: "cv-transcriptions"
 });
+
 const config = {
   searchQuery: {
     search_fields: {
