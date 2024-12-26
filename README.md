@@ -6,17 +6,17 @@
 In this project, I deploy Facebook's wav2vec2-large-90h model (henceforth referred as 'Wav2vec2'), an automatic speech recognition (ASR) model, to transcribe 4,076 .mp3 audio files from the Common Voice Dataset. Note that Wav2vec2 is pretrained and fine-tuned on Librispeech dataset on 16kHz sampled speech audio.
 
 
-## Techstack
+## Main Techstack
 
 Note that for this project, I am using Python 3.11.11
 
-- Basic: Python, CLI, Git Bash
+- Basic: Python, CLI, Shell Scripting
 - AI/ML Libraries: Transformers, Torch
 - Audio: Librosa
-- Deployment: FastAPI, Docker
+- Deployment: FastAPI, Docker, AWS EC2, AWS S3,  
 - Testing: PyTest
-- Others: asyncio, aiohttp, aiofiles, pydantic, pyYaml, git version control
-
+- Calling API: asyncio, aiohttp, aiofiles, pydantic, pyYaml
+- Version Control: git version control
 
 ## Directory Structure
 ```
