@@ -1,5 +1,5 @@
 elasticsearch_config:
-  endpoint_url: https://localhost:9200 # http`s` due to Elastic Search's xpack.security.http.ssl.enabled = True 
+  endpoint_url: http://localhost:9200 # http due to Elastic Search's xpack.security.http.ssl.enabled = False
 
 elasticsearch_map_type: # Edit this section to change your explicit mapping
   properties:
