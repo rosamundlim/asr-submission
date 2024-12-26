@@ -61,6 +61,11 @@ This is a API microservice which transcribes .mp3 files. To run this select opti
 
 ## cv-transcriptions search engine
 
+UPDATED: The workaround for this was to change xpack.http.ssl.enabled to false, and the public URL is: 
+http://cv-transcriptions.s3-website-ap-southeast-1.amazonaws.com 
+
+However please open it in your DESKTOP browser. 
+
 Unfortunately, I was not able to deploy this over a public url as I had issues connecting to the 
 cluster that I spun out of the AWS EC2 instance. 
 I hypothesize it is a complication arising from enable xpack security, leading to authentication issues.
