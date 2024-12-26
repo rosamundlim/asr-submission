@@ -64,7 +64,25 @@ This is a API microservice which transcribes .mp3 files. To run this select opti
 UPDATED: The workaround for this was to change xpack.http.ssl.enabled to false, and the public URL is: 
 http://cv-transcriptions.s3-website-ap-southeast-1.amazonaws.com 
 
-However please open it in your DESKTOP browser. 
+However please open it in your <b><u>DESKTOP</b></u> browser. s3 buckets are not https and one way is to 
+set up a cloudfront that points to the bucket, however that is not allowed when the ElasticSearch Cluster thats is on EC2 itself is not https enabled. 
+
+| Errors  | Fixes |
+| ------------- | ------------- |
+| rpm seems to have trouble, exit code 1  | used tar |
+| vm.max_map_count too low | changed to 262144  |
+| sudo curl --cacert $ES_HOME/config/certs/http_ca.crt -u elastic:$ELASTIC_PASSWORD https://localhost:9200 error: curl: (77) error setting certificate file: /config/certs/http_ca.crt | chmod -R a+r /home/ec2-user/elasticsearch-8.17.0/config/certs
+|search-ui yarn start: fatal alert: certificate unknown | Notes: ElasticsearchAPIConnector unable to pass in https ca SHA fingerprint even but elasticsearch.yml enables xpack.security.http.ssl.enabled = true
+
+Attempts: 
+    i. Refactored code based on official documentation to connect to cluster via javascript: https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html
+    ii. Error: Unable to work 
+
+Fix: 
+    - Disable xpack.security.http.ssl.enabled = true to xpack.security.http.ssl.enabled = false in order to run the website with ElasticsearchAPIConnector 
+    - Implications: only use http instead of https now |
+
+
 
 Unfortunately, I was not able to deploy this over a public url as I had issues connecting to the 
 cluster that I spun out of the AWS EC2 instance. 
