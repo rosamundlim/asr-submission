@@ -23,6 +23,7 @@ Note that for this project, I am using Python 3.11.11
 .
 └── asr-submission/
     ├── asr/
+    ├── assets/
     ├── deployment-design/
     ├── elastic-backend/
     ├── node_modules/
@@ -68,6 +69,11 @@ http://cv-transcriptions.s3-website-ap-southeast-1.amazonaws.com
 However please open it in your <b><u>DESKTOP</b></u> browser. s3 buckets are not https and one way is to 
 set up a cloudfront that points to the bucket, however that is not allowed when the ElasticSearch Cluster thats is on EC2 itself is not https enabled. 
 
+Expected result: 
+
+![alt text](assets/cv_transcriptions_static_wesbite.png)
+
+
 | Errors  | Fixes |
 | ------------- | ------------- |
 | rpm seems to have trouble, exit code 1  | used tar |
@@ -87,7 +93,7 @@ Here are some of the potential things I would try out if I had more time:
 
 Nevertheless, I was able to get the intended functions of the search engine running (see photo below): 
 
-![alt text](cv-index-search-engine.png)
+![alt text](assets/cv-index-search-engine.png)
 
 
 If you would like to deploy it locally, take the following steps: 
