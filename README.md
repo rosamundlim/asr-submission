@@ -1,24 +1,25 @@
 
 # Deploying Automatic Speech Recognition (ASR) Model to transcribe .mp3 audio files
 
-## Introduction
+## 1. Introduction
 
 In this project, I deploy Facebook's wav2vec2-large-90h model (henceforth referred as 'Wav2vec2'), an automatic speech recognition (ASR) model, to transcribe 4,076 .mp3 audio files from the Common Voice Dataset. Note that Wav2vec2 is pretrained and fine-tuned on Librispeech dataset on 16kHz sampled speech audio.
 
 
-## Main Techstack
+## 2. Main Techstack
 
 Note that for this project, I am using Python 3.11.11
 
 - Basic: Python, CLI, Shell Scripting
 - AI/ML Libraries: Transformers, Torch
 - Audio: Librosa
-- Deployment: FastAPI, Docker, AWS EC2, AWS S3,  
+- Deployment: FastAPI, Docker, ElasticSearch, Search-UI
+- Cloud: AWS EC2, AWS S3
 - Testing: PyTest
-- Calling API: asyncio, aiohttp, aiofiles, pydantic, pyYaml
 - Version Control: git version control
+- Others: asyncio, aiohttp, aiofiles, pydantic, pyYaml
 
-## Overall Directory Structure
+## 3. Overall Directory Structure
 ```
 .
 └── asr-submission/
@@ -38,7 +39,7 @@ Note that for this project, I am using Python 3.11.11
 
 - NOTE: I store paths and .env variables, secrets in separate files rather than hardcoding them into the main script (security purposes)
 
-## Setup
+## 4. Setup
 
 There is a run.sh file at root level, with the options:
 
@@ -54,9 +55,9 @@ Exit:
 
 4. Safely exits the script.
 
-To execute run.sh, simply cd to the root folder ./asr-submission, and run ./run.sh in your bash terminal or equivalent. 
+To execute run.sh, simply cd to the root folder `./asr-submission`, and execute `./run.sh` in your bash terminal or equivalent. 
 
-## asr/ directory
+## 5. asr/ directory
 
 ```
 asr/
@@ -93,13 +94,34 @@ The above shows the structure of the asr/ directory:
 - `cv-decode.py`: Script that calls FastAPI to transcribe all 4,076 .mp3 files in `cv-valid-dev/`.
 - `Dockerfile`: Docker instructions to containerize `asr_api.py`.
 
-### asr_api.py
+### 5.1 asr_api.py
 
+This is the app module that serves the Wav2Vec2 Inference Pipeline as a FastAPI app. 
+This script defines a FastAPI app for ASR tasks, loading a Wav2Vec model at startup. It includes a health check endpoint and an ASR endpoint that processes .mp3 files to return transcriptions and durations, using utility functions for audio processing and error handling.
 
-### cv-decode.py
+#### 5.1.1 Containerizing asr_api.py
 
+i. To build a docker image, run the following in terminal from root ./asr-submission directory
+
+```docker build -f ./asr/Dockerfile -t asr-api .``` 
+
+ii. To run docker container, run the following commands in terminal
+
+```docker run -p 8001:8001 --name <container name> <img name>```
+
+### 5.2 cv-decode.py
 
 This is a API microservice which transcribes .mp3 files. To run this select option 2 when executing run.sh. Ensure you have requirements installed beforehand (option 1 in run.sh)
+
+The script validates audio files, checks API health, and transcribes files concurrently 
+using aiohttp and asyncio, adhering to specified TCP and timeout limits. Transcription results, 
+including text and duration, are written to a CSV file.
+
+#### 5.2.1 error logs
+
+| Error      | Fix |
+| ----------- | ----------- |
+| Connection timeout when script ran for the first time as no limit set on no. of concurrent jobs | set   aiohttp_tcp_connectors: 100; aiohttp_timeout: 600; semaphore_limit: 50 to limit concurrent jobs|
 
 ## cv-transcriptions search engine
 
