@@ -48,15 +48,13 @@ app = FastAPI(lifespan=lifespan,
 if not app.openapi_schema:
     app.openapi_schema = openapi_params
 
-# Task 2b
 @app.get("/ping")
-async def ping():
+async def ping() -> dict[str, str]:
     """
     A health check endpoint to ensure that the API service is working
     """
     return {"message":"pong"}
 
-# Task 2c
 class AsrResponse(BaseModel):
     """
     Defining the data validation for response fields for /asr post request
@@ -65,7 +63,7 @@ class AsrResponse(BaseModel):
     duration: str
 
 @app.post("/asr", response_model=AsrResponse)
-async def asr(file: UploadFile = File(...)):
+async def asr(file: UploadFile = File(...)) -> dict[str, str]:
     """
     Wav2Vec model inferencing for ASR tasks.
     It takes in the raw .mp3 file, resamples it to sampling_freq
