@@ -56,7 +56,7 @@ Exit:
 
 To execute run.sh, simply cd to the root folder ./asr-submission, and run ./run.sh in your bash terminal or equivalent. 
 
-## asr directory
+## asr/ directory
 
 ```
 asr/
@@ -70,18 +70,33 @@ asr/
 ├── logs
 ├── notebooks/
 │   └── inference.ipynb
-└── tests/
-    ├── __init__.py
-    ├── test_utility_functions.py
-    ├── .dockerignore
-    ├── asr_api.py
-    ├── cv-decode.py
-    ├── cv-valid-dev.csv
-    └── Dockerfile
+├── tests/
+│   ├── __init__.py
+│   └── test_utility_functions.py
+├── .dockerignore
+├── asr_api.py
+├── cv-decode.py
+├── cv-valid-dev.csv
+└── Dockerfile
 ```
 
-The above shows the structure of the asr/ directory. 
+The above shows the structure of the asr/ directory: 
 - `paths.py`: Stores directories and filepaths required for asr/ tasks to ensure modularity avoid hardcoding into  scripts
+- `utility_functions.py`: Defines helper functions for asr transcription tasks
+- `conf/`: Folder contains config files. `config.yml` contains the settings/params for asr transcription tasks; `openapi.yml` defines the API's structure, endpoints, and operations in a standardized format for documentation, testing, and client generation.
+- `cv-valid-dev/`: Folder that contains 4,076 .mp3 audio files that will be used for transcription (.gitignore due to size)
+- `logs`: Contains logs of running `cv-decode.py` script. folders in logs represent `yyyy-mm-dd` (date where script was run) and individual files are named `hh-mm-ss` (time where script started running). This convention will ensure the logs are organized and makes it easier for user to find their logs. 
+- `notebooks/`: Folder contains `inference.ipynb`, which reproduces the inference pipeline tutorial in Wav2Vec2's Hugging Face card. 
+- `tests/`: Folder contains `test_utility_functions.py`, which contains tests (PyTest Framework) for functions used in `asr_api.py` and `cv-decode.py`.
+- `.dockerignore` : Folders/files that Dockerfile should ignore when containerizing `asr_api.py`.
+- `asr_api.py`: FastAPI deployment of the inference pipeline
+- `cv-decode.py`: Script that calls FastAPI to transcribe all 4,076 .mp3 files in `cv-valid-dev/`.
+- `Dockerfile`: Docker instructions to containerize `asr_api.py`.
+
+### asr_api.py
+
+
+### cv-decode.py
 
 
 This is a API microservice which transcribes .mp3 files. To run this select option 2 when executing run.sh. Ensure you have requirements installed beforehand (option 1 in run.sh)

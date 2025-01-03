@@ -1,5 +1,5 @@
 """
-Task 2d - to transcribe all 4,076 .mp3 files in cv-valid-dev (Common Voice dataset).
+Script to transcribe all 4,076 .mp3 files in cv-valid-dev (Common Voice dataset).
 References:
 i. aiohttp/asyncio documentation,
 ii. https://www.twilio.com/en-us/blog/asynchronous-http-requests-in-python-with-aiohttp
