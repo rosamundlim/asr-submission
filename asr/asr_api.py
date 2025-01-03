@@ -1,4 +1,12 @@
-"""App module to serve FastAPI app"""
+"""
+This script defines a FastAPI application that serves as an Automatic Speech Recognition (ASR) 
+microservice. It initializes ASR models (Wav2Vec) during the app's lifespan using a configuration 
+file. The application provides two endpoints: a health check (/ping) and an ASR service (/asr). 
+The /asr endpoint accepts .mp3 audio files, resamples them, tokenizes the audio, performs 
+transcription using the ASR model, and returns the transcription and original duration. 
+Proper file handling and error management are included, along with data validation for 
+responses using Pydantic.
+"""
 
 import logging
 from contextlib import asynccontextmanager
