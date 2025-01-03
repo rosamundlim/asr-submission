@@ -18,7 +18,7 @@ Note that for this project, I am using Python 3.11.11
 - Calling API: asyncio, aiohttp, aiofiles, pydantic, pyYaml
 - Version Control: git version control
 
-## Directory Structure
+## Overall Directory Structure
 ```
 .
 └── asr-submission/
@@ -56,7 +56,33 @@ Exit:
 
 To execute run.sh, simply cd to the root folder ./asr-submission, and run ./run.sh in your bash terminal or equivalent. 
 
-## asr-api 
+## asr directory
+
+```
+asr/
+├── __init__.py
+├── paths.py
+├── utility_functions.py
+├── conf/
+│   ├── config.yml
+│   └── openapi.yml
+├── cv-valid-dev
+├── logs
+├── notebooks/
+│   └── inference.ipynb
+└── tests/
+    ├── __init__.py
+    ├── test_utility_functions.py
+    ├── .dockerignore
+    ├── asr_api.py
+    ├── cv-decode.py
+    ├── cv-valid-dev.csv
+    └── Dockerfile
+```
+
+The above shows the structure of the asr/ directory. 
+- `paths.py`: Stores directories and filepaths required for asr/ tasks to ensure modularity avoid hardcoding into  scripts
+
 
 This is a API microservice which transcribes .mp3 files. To run this select option 2 when executing run.sh. Ensure you have requirements installed beforehand (option 1 in run.sh)
 
