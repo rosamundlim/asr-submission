@@ -109,6 +109,12 @@ ii. To run docker container, run the following commands in terminal
 
 ```docker run -p 8001:8001 --name <container name> <img name>```
 
+#### 5.1.2 UploadFile 
+
+Data Privacy issues are of concern whenever users upload something onto the web. The `UploadFile` class from
+FastAPI is built on [starlette](https://www.starlette.io/requests/). It uses [SpooledTemporaryFile](https://docs.python.org/3/library/tempfile.html#tempfile.SpooledTemporaryFile) under the hood. Data is spooled in memory until the file size exceeds max_size, at which point the contents are written to disk and operation proceeds as with [TemporaryFile()](https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryFile). This means that files written to disk are managed securely and are automatically destroyed when closed, either explicitly by the application or implicitly through garbage collection. This behavior ensures that temporary files do not persist longer than necessary, reducing the risk of inadvertent data retention.
+
+
 ### 5.2 cv-decode.py
 
 This is a API microservice which transcribes .mp3 files. To run this select option 2 when executing run.sh. Ensure you have requirements installed beforehand (option 1 in run.sh)
@@ -121,7 +127,7 @@ including text and duration, are written to a CSV file.
 
 | Error      | Fix |
 | ----------- | ----------- |
-| Connection timeout when script ran for the first time as no limit set on no. of concurrent jobs | set   aiohttp_tcp_connectors: 100; aiohttp_timeout: 600; semaphore_limit: 50 to limit concurrent jobs|
+| Connection timeout when script ran for the first time as no limit set on no. of concurrent jobs | set   aiohttp_tcp_connectors=100; aiohttp_timeout=600; semaphore_limit=50, to limit concurrent jobs|
 
 ## cv-transcriptions search engine
 
