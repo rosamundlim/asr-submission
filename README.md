@@ -159,7 +159,30 @@ elastic-backend/
 - `eda.ipynb`: notebook to explore the data in `cv-valid-dev.csv`.
 - `elastcsearch.yml`: allows cluster to listen on all network interfaces (0.0.0.0), and enables CORS (Cross-Origin Resource Sharing) with unrestricted origins (*), specific headers, and HTTP methods to allow external applications to interact with the cluster. `elasticsearch.yml` is mounted to the ElasticSearch container (example, line 65 in `docker-compose.yml`)
 
+### 6.1 Run 2-node ElasticSearch Cluster
 
+i. Configure and start the cluster 
+```
+$ docker-compose up -d
+```
+
+ii. Run cv-index.py
+
+Ensure you are in elastic-backend/ directory
+
+```
+$ python cv-index.py
+```
+
+iii. Stop and remove the cluster
+
+```
+$ docker-compose down
+```
+To delete the network, containers, and volumes when you stop the cluster, specify the -v option:
+```
+$ docker-compose down -v
+```
 
 ## cv-transcriptions search engine
 
