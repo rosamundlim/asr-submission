@@ -118,13 +118,13 @@ def preprocess_df(path: str) -> pd.DataFrame:
 
 if __name__ == "__main__":
     # Connect to cluster
-    #es = Elasticsearch([es_endpoint],ca_certs = CA_CERT_PATH,basic_auth=(es_username, es_password))
+    es = Elasticsearch([es_endpoint],ca_certs = CA_CERT_PATH,basic_auth=(es_username, es_password))
 
-    es = Elasticsearch("https://52.77.217.6:9200",
-                       basic_auth=("elastic","drhWCi=oYLrMglMy4Nfd"),
-                       ssl_assert_fingerprint="6D:03:24:F6:3D:C6:70:DB:9E:73:9E:5D:D6:09:A2:B9:57:95:60:BB:6F:B3:44:25:A8:B4:7A:68:03:54:5A:C4"
-                       )
-    
+    #es = Elasticsearch("https://52.77.217.6:9200",
+    #                   basic_auth=("elastic","drhWCi=oYLrMglMy4Nfd"),
+    #                   ssl_assert_fingerprint="6D:03:24:F6:3D:C6:70:DB:9E:73:9E:5D:D6:09:A2:B9:57:95:60:BB:6F:B3:44:25:A8:B4:7A:68:03:54:5A:C4"
+    #                   )
+
     print(es.info())
 
     resp = es.indices.exists(index=index_name)
