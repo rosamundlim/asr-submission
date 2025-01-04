@@ -129,6 +129,38 @@ including text and duration, are written to a CSV file.
 | ----------- | ----------- |
 | Connection timeout when script ran for the first time as no limit set on no. of concurrent jobs | set   aiohttp_tcp_connectors=100; aiohttp_timeout=600; semaphore_limit=50, to limit concurrent jobs|
 
+## 6. elastic-backend/ directory
+
+Now that we have the transcriptions of the 4,076 .mp3 files in `cv-valid-dev.csv`, we will next try to create a search engine to serve the 4,076 transcriptions. 
+The elastic-backend/ directory serves as the backend code for the search engine. 
+
+```
+elastic-backend/
+├── eb_utils/
+│   ├── __init__.py
+│   ├── paths.py
+│   └── utility_functions.py
+├── .env (in .gitignore)
+├── .env.example
+├── ca.crt (in .gitignore)
+├── config.yml
+├── cv-index.py
+├── docker-compose.yml
+├── eda.ipynb
+└── elasticsearch.yml
+```
+
+- `eb_utils/` : contains scripts for utility functions and defined paths used in `cv-index.py`
+- `.env` : git ignored. see `.env.example` for a sample of what to include for .env
+- `.env.example`: sample for `.env` which is git ignored.
+- `ca.crt`: a ca certificate. copied from container. It allows the client to verify ElasticSearch's server authenticity. 
+- `config.yml`: contains the configurations for the backend, including column mappings and endpoint url to be used in indexing in ElasticSearch. 
+- `docker-compose.yml`: defines the two-node ElasticSearch cluster. Adapted from ElasticSearch's [github repository](https://github.com/elastic/elasticsearch/blob/main/docs/reference/setup/install/docker/docker-compose.yml)
+- `eda.ipynb`: notebook to explore the data in `cv-valid-dev.csv`.
+- `elastcsearch.yml`: allows cluster to listen on all network interfaces (0.0.0.0), and enables CORS (Cross-Origin Resource Sharing) with unrestricted origins (*), specific headers, and HTTP methods to allow external applications to interact with the cluster. `elasticsearch.yml` is mounted to the ElasticSearch container (example, line 65 in `docker-compose.yml`)
+
+
+
 ## cv-transcriptions search engine
 
 UPDATED: <br> 
