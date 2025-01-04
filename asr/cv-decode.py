@@ -2,9 +2,9 @@
 This script automates the transcription of 4,076 .mp3 files from the Common Voice dataset using an 
 ASR inference API. It validates audio files, checks API health, and transcribes files concurrently 
 using aiohttp and asyncio, adhering to specified TCP and timeout limits. Transcription results, 
-including text and duration, are written to cv-valid-dev.csv, and progress is logged for debugging and 
-tracking. The workflow is encapsulated in the AudioTranscriber class, which manages the entire 
-process, from validation to transcription and result storage.
+including text and duration, are written to cv-valid-dev.csv, and progress is logged for 
+debugging and tracking. The workflow is encapsulated in the AudioTranscriber class, which 
+manages the entire process, from validation to transcription and result storage.
 
 References:
 i. aiohttp/asyncio documentation,
