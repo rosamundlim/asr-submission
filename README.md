@@ -159,14 +159,19 @@ elastic-backend/
 - `eda.ipynb`: notebook to explore the data in `cv-valid-dev.csv`.
 - `elastcsearch.yml`: allows cluster to listen on all network interfaces (0.0.0.0), and enables CORS (Cross-Origin Resource Sharing) with unrestricted origins (*), specific headers, and HTTP methods to allow external applications to interact with the cluster. `elasticsearch.yml` is mounted to the ElasticSearch container (example, line 65 in `docker-compose.yml`)
 
-### 6.1 Run 2-node ElasticSearch Cluster
+### 6.1 Run 2-node ElasticSearch Cluster with docker compose
 
-i. Configure and start the cluster 
+i. cd to elastic-backend/ directory
+
+ii. Configure and start the cluster (Ensure you have docker running)
+
+`-d` flag runs in dontainer in background
+
 ```
 $ docker-compose up -d
 ```
 
-ii. Run cv-index.py
+iii. Run cv-index.py
 
 Ensure you are in elastic-backend/ directory
 
@@ -174,7 +179,15 @@ Ensure you are in elastic-backend/ directory
 $ python cv-index.py
 ```
 
-iii. Stop and remove the cluster
+You should expect to see the following, if you are successfully connected to the cluster: 
+
+```
+elastic
+2025-01-04 14:59:51,561:INFO:GET https://localhost:9200/ [status:200 duration:0.022s]
+{'name': 'es01', 'cluster_name': 'docker-cluster', 'cluster_uuid': 'TtB378WWTFaSh7EsLOYY1g', 'version': {'number': '8.12.0', 'build_flavor': 'default', 'build_type': 'docker', 'build_hash': '1665f706fd9354802c02146c1e6b5c0fbcddfbc9', 'build_date': '2024-01-11T10:05:27.953830042Z', 'build_snapshot': False, 'lucene_version': '9.9.1', 'minimum_wire_compatibility_version': '7.17.0', 'minimum_index_compatibility_version': '7.0.0'}, 'tagline': 'You Know, for Search'}
+```
+
+iv. Stop and remove the cluster
 
 ```
 $ docker-compose down
