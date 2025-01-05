@@ -238,6 +238,11 @@ The following document contains a simple diagram showing the deployment design o
 
 [text](deployment-design/design.pdf)
 
+### 7.2 Connecting to Elastic Search on AWS
+
+i. Start a AWS EC2 instance with Amazon Linux 2023 AMI (t2.medium)
+ii. Install Elasticsearch from archive on Linux following this [tutorial](https://www.elastic.co/guide/en/elasticsearch/reference/current/targz.html). 
+
 
 ## cv-transcriptions search engine
 
