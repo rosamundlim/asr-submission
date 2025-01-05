@@ -5,7 +5,6 @@
 
 In this project, I deploy Facebook's wav2vec2-large-90h model (henceforth referred as 'Wav2vec2'), an automatic speech recognition (ASR) model, to transcribe 4,076 .mp3 audio files from the Common Voice Dataset. Note that Wav2vec2 is pretrained and fine-tuned on Librispeech dataset on 16kHz sampled speech audio.
 
-
 ## 2. Main Techstack
 
 Note that for this project, I am using Python 3.11.11
@@ -243,19 +242,7 @@ The following document contains a simple diagram showing the deployment design o
 i. Start a AWS EC2 instance with Amazon Linux 2023 AMI (t2.medium) <br>
 ii. Install Elasticsearch from archive on Linux following this [tutorial](https://www.elastic.co/guide/en/elasticsearch/reference/current/targz.html).
 
-## cv-transcriptions search engine
-
-UPDATED: <br> 
-The workaround for this was to change xpack.http.ssl.enabled to false, and the public URL is: 
-http://cv-transcriptions.s3-website-ap-southeast-1.amazonaws.com 
-
-However please open it in your <b><u>DESKTOP</b></u> browser. s3 buckets are not https and one way is to 
-set up a cloudfront that points to the bucket, however that is not allowed when the ElasticSearch Cluster thats is on EC2 itself is not https enabled. 
-
-Expected result: 
-
-![alt text](assets/cv_transcriptions_static_wesbite.png)
-
+Additionally, the following error logs shows some of the issues and fixes during the deployment of ELasticSearch over the AWS EC2 Instance. 
 
 | Errors  | Fixes |
 | ------------- | ------------- |
@@ -265,27 +252,22 @@ Expected result:
 |search-ui yarn start: fatal alert: certificate unknown | ElasticsearchAPIConnector unable to pass in https ca SHA fingerprint even but elasticsearch.yml enables xpack.security.http.ssl.enabled = true. I tried to refactored App.js code based on official documentation to connect to cluster via javascript: https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html, that did not work. My workaround is to : Disable xpack.security.http.ssl.enabled = true to xpack.security.http.ssl.enabled = false in order to run the website with ElasticsearchAPIConnector. Implications: only use http instead of http now. |
 
 
-ORIGINAL: <br>
+### 7.3 Designing the front-end of the search engine
 
-Unfortunately, I was not able to deploy this over a public url as I had issues connecting to the 
-cluster that I spun out of the AWS EC2 instance. 
-I hypothesize it is a complication arising from enable xpack security, leading to authentication issues.
-Here are some of the potential things I would try out if I had more time:
-- Spin up a EC2 cluster with a docker-compose.yml without xpack security, then I would have to find a way to migrate the index that I have mounted to my local elastic search cluster.
-- Spin up a EC2 cluster directly installing AWS - I have tried to follow their documentation but I believe their instructions to be outdated. 
+`search-ui/app-search-reference-ui-react-master/src/App.js` holds the layout of the search engine. I followed and adapted code from ElasticSearch's sample in this [tutorial](https://www.elastic.co/guide/en/search-ui/current/tutorials-elasticsearch.html#tutorials-elasticsearch-installing-connector). 
+This allows me to include:
+- `generated__text`, which is the transcriptions generated from Wav2Vec2 as a searchable field. 
+- `age`, `gender`, `accent`, `duration`: as fields that can be filtered to refine the search results. 
 
-Nevertheless, I was able to get the intended functions of the search engine running (see photo below): 
-
+Below is a preview: 
 ![alt text](assets/cv-index-search-engine.png)
 
+### 7.4 Deploying as a static website 
 
-If you would like to deploy it locally, take the following steps: 
-1. Go to requirements.txt > run pip install on lines 21 and 22
-2. Ensure you have the following files in the following directories: 
-- ../elastic-backend: edit env.example to .env, place your ca.crt here (refer to ElastiSearch documentation)
-- ../search-ui/../config/: edit engine.json.example to engine.json
-- ../search-ui/../src/: replace secrets.json.example with your key and change it to secrets.json
-- npm install node-modules (ensure you have node-modules installed)
-- yarn (ensure you have yarn installed)
+I ran `yarn build` in, generating the `search-ui/app-search-reference-ui-react-master/build/` folder. I uploaded the folder into an Amazon S3 bucket, and enabled static website hosting. 
 
-Given that you have followed through these steps, you should be able to deploy locally by executing ./run.sh from the root directory and selecting option 3. 
+**_Please Note_**:  Due to costs, I have undeployed the app. However below is a screenshot of its deployment. An example query is also shown by searching "WINE" and checking the "5-10 sec" filter box. 
+
+Expected result: 
+
+![alt text](assets/cv_transcriptions_static_wesbite.png)
